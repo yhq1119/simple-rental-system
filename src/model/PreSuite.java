@@ -35,6 +35,10 @@ public class PreSuite extends Property {
         }
     }
 
+    public Date getLastMaintenanceDate() {
+        return lastMaintenanceDate;
+    }
+
     public String getLastMDate() {
         return DateTime.simpleDateWithSlash(this.lastMaintenanceDate);
     }

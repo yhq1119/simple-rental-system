@@ -59,11 +59,32 @@ public class RentalSys implements RentalSysInterface {
         throw new PropertyNotFoundException();
     }
 
+    private boolean isValidDate(Date start, Date end, Property property) {
+
+        if (end.before(start) || start.before(new Date())) {
+            return false;
+        }
+        if (property instanceof PreSuite) {
+            if (
+                    start.after(((PreSuite) property).getLastMaintenanceDate())
+                            &&
+                            end.before(((PreSuite) property).nextMaintenanceDate())
+
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     @Override
     public void rentP(Property property, String guest,
                       Date startDate, Date estimateEndDate)
             throws StatusUnavailableException, DateNotValidException {
-        if (startDate.after(estimateEndDate)) {
+        if (!isValidDate(startDate, estimateEndDate, property)) {
             throw new DateNotValidException();
         }
         if (property.status.equals(RentalStatus.AVAILABLE)) {
